@@ -31,8 +31,8 @@ public class StartScreen extends Activity {
 				}
 				finally{
 					
-					Intent menu = new Intent(StartScreen.this, MainMenu.class);
-					startActivity(menu);
+					Intent tuner = new Intent(StartScreen.this, GitarTuner.class);
+					startActivity(tuner);
 					finish();
 					
 				}

@@ -30,12 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity
-            android:name="com.PouyaApp.kookyargitar.MainMenu"
-            android:label="@string/app_name"
-            android:exported="false">
-        </activity>
 
         <service 
             android:name="org.puredata.android.service.PdService"
