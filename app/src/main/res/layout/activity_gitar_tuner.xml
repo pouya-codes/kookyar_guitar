@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/backgroundColor"
+    android:padding="8dp"
+    android:shrinkColumns="*"
+    android:stretchColumns="*" >
+
+    <TableRow android:layout_width="fill_parent"
+        android:paddingBottom="4dp">
+
+        <Button
+            android:id="@+id/tar_1"
+            android:text="@string/sim_1"
+            android:textColor="@color/white"
+            android:background="@drawable/button_tuner_style"
+            android:enabled="true" />
+
+        <Button
+            android:id="@+id/tar_2"
+            android:text="@string/sim_2"
+            android:textColor="@color/white"
+            android:background="@drawable/button_tuner_style"
+            android:enabled="true" />
+
+        <Button
+            android:id="@+id/tar_3"
+            android:text="@string/sim_3"
+            android:textColor="@color/white"
+            android:background="@drawable/button_tuner_style"
+            android:enabled="true" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp" >
+
+        <Button
+            android:id="@+id/tar_4"
+            android:text="@string/sim_4"
+            android:textColor="@color/white"
+            android:background="@drawable/button_tuner_style"
+            android:enabled="true" />
+
+        <Button
+            android:id="@+id/tar_5"
+            android:text="@string/sim_5"
+            android:textColor="@color/white"
+            android:background="@drawable/button_tuner_style"
+            android:enabled="true" />
+
+        <Button
+            android:id="@+id/tar_6"
+            android:text="@string/sim_6"
+            android:textColor="@color/white"
+            android:background="@drawable/button_tuner_style"
+            android:enabled="true" />
+    </TableRow>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:background="@drawable/gitar"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_sim"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:orientation="vertical" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/blue" />
+
+    <TableRow android:layout_width="fill_parent"
+        android:paddingTop="8dp" >
+
+        <TextView
+            android:id="@+id/pitch_label"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_span="4"
+            android:gravity="center"
+            android:padding="20px"
+            android:text="0.0"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/green" />
+    </TableRow>
+
+    <TableRow android:layout_width="fill_parent"
+        android:paddingTop="8dp" >
+
+        <com.PouyaApp.kookyargitar.PitchView
+            android:id="@+id/pitch_view"
+            android:layout_width="fill_parent"
+            android:layout_height="350dp"
+            android:layout_span="4" />
+    </TableRow>
+
+</TableLayout>
