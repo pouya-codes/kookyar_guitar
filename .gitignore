@@ -1,7 +1,12 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
 # Built application files
 *.apk
 *.ap_
-*.aab
 
 # Files for the ART/Dalvik VM
 *.dex
@@ -13,7 +18,7 @@
 bin/
 gen/
 out/
-release/
+app/release/
 
 # Gradle files
 .gradle/
@@ -34,29 +39,16 @@ proguard/
 # Android Studio captures folder
 captures/
 
-# IntelliJ
+# Intellij
 *.iml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
-.idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
-.idea/caches
-.idea/modules.xml
-.idea/.name
-.idea/compiler.xml
-.idea/copyright/profiles_settings.xml
-.idea/encodings.xml
-.idea/misc.xml
-.idea/runConfigurations.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
-*.iws
 
 # Keystore files
 *.jks
-*.keystore
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
@@ -69,21 +61,4 @@ freeline.py
 freeline/
 freeline_project_description.json
 
-# fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-fastlane/test_output
-fastlane/readme.md
-
-# Version control
-.svn/
-
-# Backup files
-*.bak
-*.backup
-*~
-
-# OS files
-.DS_Store
-Thumbs.db
+gradle/
