@@ -129,6 +129,7 @@
     
     <string name="title_activity_main">MainActivity</string>
     <string name="tuning">تشخیص خودکار سیم</string>
+    <string name="kook_change_label">تغییر کوک</string>
     <string-array name="kookChange">
         <item>ساز سر جای خود کوک شود</item>
         <item>ساز ربع پرده پایین تر کوک شود</item>

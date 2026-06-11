@@ -36,7 +36,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +47,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.materialswitch.MaterialSwitch;
 
 import com.PouyaApp.kookyargitar.R;
 import com.daimajia.androidanimations.library.Techniques;
@@ -76,7 +77,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 	private int laFrequens = 440;
 	private int sensitiveLevel = midSensitive;
 	private int pressure;
-	private CheckBox tuning;
+	private MaterialSwitch tuning;
 	private Spinner kookChangeSpinner;
 	private double nimpardehSub = 0;
 	private int selectedStringIndex = -1;
@@ -306,7 +307,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		kookChangeSpinner.setOnItemSelectedListener(this);
 		kookChangeSpinner.setSelection(getprefs.getInt("change", 0));
 
-		tuning = (CheckBox) findViewById(R.id.checkBox_tuning);
+		tuning = (MaterialSwitch) findViewById(R.id.checkBox_tuning);
 		findViewById(R.id.tuning).setOnClickListener(this);
 		tuning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
