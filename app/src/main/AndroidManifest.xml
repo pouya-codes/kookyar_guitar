@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="50"
-    android:versionName="5.0.0">
+    android:versionCode="52"
+    android:versionName="5.2.0">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    
+    <uses-feature 
+        android:name="android.hardware.microphone" 
+        android:required="true" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/kookyar"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:extractNativeLibs="true">
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:supportsRtl="true">
         
         <activity
-            android:name="com.PouyaApp.kookyargitar.GitarTuner"
+            android:name=".GitarTuner"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -22,7 +30,7 @@
         </activity>
         
         <activity
-            android:name="com.PouyaApp.kookyargitar.StartScreen"
+            android:name=".StartScreen"
             android:label="@string/app_name"
             android:exported="true">
             <intent-filter>
@@ -33,34 +41,31 @@
 
         <service 
             android:name="org.puredata.android.service.PdService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
 
         <activity
-            android:name="com.PouyaApp.kookyargitar.About"
+            android:name=".About"
             android:label="@string/about"
-            android:theme="@android:style/Theme.Dialog"
             android:exported="false">
         </activity>
         
         <activity
-            android:name="com.PouyaApp.kookyargitar.TunerHelp"
+            android:name=".TunerHelp"
             android:label="@string/rahnama"
-            android:theme="@android:style/Theme.Dialog"
             android:exported="false">
         </activity>
         
         <activity
-            android:name="com.PouyaApp.kookyargitar.Prefs"
+            android:name=".Prefs"
             android:label="@string/tanzimat"
             android:exported="false">
         </activity>
         
         <activity
-            android:name="com.PouyaApp.kookyargitar.Help"
+            android:name=".Help"
             android:label="@string/rahnama"
-            android:theme="@android:style/Theme.Dialog"
             android:exported="false">
         </activity>
     </application>
-
 </manifest>

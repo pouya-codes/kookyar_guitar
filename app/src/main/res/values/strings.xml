@@ -128,6 +128,13 @@
 به امید اینکه با کوک یار عده ی بیشتری به سمت موسیقی متمایل شوند</string>
     
     <string name="title_activity_main">MainActivity</string>
+    <string name="tuning">تشخیص خودکار سیم</string>
+    <string-array name="kookChange">
+        <item>ساز سر جای خود کوک شود</item>
+        <item>ساز ربع پرده پایین تر کوک شود</item>
+        <item>ساز نیم پرده پایین تر کوک شود</item>
+        <item>ساز یک پرده پایین تر کوک شود</item>
+    </string-array>
    <string name="edame">ادامه</string>
         <string-array name="sensitive">
         <item>کم(مناسب محل های شلوغ)</item>

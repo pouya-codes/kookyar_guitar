@@ -1,11 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#98592d"
-    android:gravity="fill"
-    tools:context=".StartScreen" >
+    android:background="@color/myorange">
 
+    <!-- Main logo image centered -->
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
@@ -13,14 +12,14 @@
         android:layout_centerInParent="true"
         android:src="@drawable/startscreen" />
 
-    <!-- Version information at bottom -->
+    <!-- Version information below logo -->
     <LinearLayout
         android:id="@+id/version_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/imageView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <TextView
@@ -65,5 +64,15 @@
             android:textSize="16sp" />
 
     </LinearLayout>
+
+    <!-- Progress bar -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/version_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:indeterminate="true" />
 
 </RelativeLayout>

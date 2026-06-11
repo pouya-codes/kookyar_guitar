@@ -1,109 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/backgroundColor"
-    android:padding="8dp"
-    android:shrinkColumns="*"
-    android:stretchColumns="*" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/backgroundColor">
 
-    <TableRow android:layout_width="fill_parent"
-        android:paddingBottom="4dp">
+    <include layout="@layout/app_bar" />
 
-        <Button
-            android:id="@+id/tar_1"
-            android:text="@string/sim_1"
-            android:textColor="@color/white"
-            android:background="@drawable/button_tuner_style"
-            android:enabled="true" />
-
-        <Button
-            android:id="@+id/tar_2"
-            android:text="@string/sim_2"
-            android:textColor="@color/white"
-            android:background="@drawable/button_tuner_style"
-            android:enabled="true" />
-
-        <Button
-            android:id="@+id/tar_3"
-            android:text="@string/sim_3"
-            android:textColor="@color/white"
-            android:background="@drawable/button_tuner_style"
-            android:enabled="true" />
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp" >
-
-        <Button
-            android:id="@+id/tar_4"
-            android:text="@string/sim_4"
-            android:textColor="@color/white"
-            android:background="@drawable/button_tuner_style"
-            android:enabled="true" />
-
-        <Button
-            android:id="@+id/tar_5"
-            android:text="@string/sim_5"
-            android:textColor="@color/white"
-            android:background="@drawable/button_tuner_style"
-            android:enabled="true" />
-
-        <Button
-            android:id="@+id/tar_6"
-            android:text="@string/sim_6"
-            android:textColor="@color/white"
-            android:background="@drawable/button_tuner_style"
-            android:enabled="true" />
-    </TableRow>
-
+    <!-- String buttons -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <Spinner
+            android:id="@+id/spinnerKookChange"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/spinner_background"
+            android:popupBackground="@color/dropdownBackground"
+            android:spinnerMode="dropdown" />
+
+        <LinearLayout
+            android:id="@+id/tuning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <CheckBox
+                android:id="@+id/checkBox_tuning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:clickable="false"
+                android:buttonTint="@color/accentColor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/tuning"
+                android:textColor="@color/green"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- String buttons row 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="6dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tar_1"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="@string/sim_1"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/primaryColorDark" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tar_2"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="@string/sim_2"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/primaryColorDark" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tar_3"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="@string/sim_3"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/primaryColorDark" />
+        </LinearLayout>
+
+        <!-- String buttons row 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tar_4"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="@string/sim_4"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/primaryColorDark" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tar_5"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="@string/sim_5"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/primaryColorDark" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tar_6"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="@string/sim_6"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/primaryColorDark" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Guitar image -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
         android:background="@drawable/gitar"
+        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/layout_sim"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
             android:orientation="vertical" />
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="70dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/blue" />
+    <!-- Pitch label -->
+    <TextView
+        android:id="@+id/pitch_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"
+        android:text=""
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/accentColor" />
 
-    <TableRow android:layout_width="fill_parent"
-        android:paddingTop="8dp" >
+    <!-- Pitch View at bottom - takes remaining space -->
+    <com.kookyar.common.PitchView
+        android:id="@+id/pitch_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/pitch_label"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_span="4"
-            android:gravity="center"
-            android:padding="20px"
-            android:text="0.0"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/green" />
-    </TableRow>
-
-    <TableRow android:layout_width="fill_parent"
-        android:paddingTop="8dp" >
-
-        <com.PouyaApp.kookyargitar.PitchView
-            android:id="@+id/pitch_view"
-            android:layout_width="fill_parent"
-            android:layout_height="350dp"
-            android:layout_span="4" />
-    </TableRow>
-
-</TableLayout>
+</LinearLayout>

@@ -3,46 +3,46 @@ apply plugin: 'com.android.application'
 repositories {
     google()
     mavenCentral()
-    maven { url = 'https://jitpack.io' }
+    maven { url 'https://jitpack.io' }
     flatDir {
         dirs 'libs'
     }
 }
 
+def keystorePropertiesFile = rootProject.file("../keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
-    namespace = 'com.PouyaApp.kookyargitar'
-    compileSdk = 34
+    namespace 'com.PouyaApp.kookyargitar'
+    compileSdk 35
     
     defaultConfig {
-        applicationId = 'com.PouyaApp.kookyargitar'
-        minSdk = 21
-        targetSdk = 34
-        versionName = '5.0.0'
-        versionCode = 50
+        applicationId 'com.PouyaApp.kookyargitar'
+        minSdk 21
+        targetSdk 35
+        versionName '5.2.0'
+        versionCode 52
         
         vectorDrawables.useSupportLibrary = true
     }
-    
-    buildTypes {
+
+    signingConfigs {
         release {
-            minifyEnabled = true
-            shrinkResources = true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            minifyEnabled = false
-            debuggable = true
+            if (keystorePropertiesFile.exists()) {
+                storeFile file("${rootProject.projectDir.parent}/${keystoreProperties['storeFile']}")
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
         }
     }
     
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-    
-    lint {
-        baseline = file("lint-baseline.xml")
-        abortOnError = false
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     
     packagingOptions {
@@ -53,21 +53,33 @@ android {
             useLegacyPackaging = true
         }
     }
-    
+
     aaptOptions {
         noCompress 'arsc'
     }
-    
+
     buildFeatures {
         buildConfig = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (keystorePropertiesFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
     }
 }
 
 dependencies {
+    implementation 'com.kookyar:kookyar-common'
+
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.core:core:1.13.1'
-    implementation 'androidx.activity:activity:1.9.1'
-    implementation 'androidx.fragment:fragment:1.8.2'
+    implementation 'androidx.core:core:1.15.0'
+    implementation 'androidx.activity:activity:1.10.1'
+    implementation 'androidx.fragment:fragment:1.8.6'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.google.android.material:material:1.12.0'
     

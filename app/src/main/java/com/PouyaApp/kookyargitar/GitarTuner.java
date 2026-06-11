@@ -1,5 +1,8 @@
 package com.PouyaApp.kookyargitar;
 
+import com.kookyar.common.PersianReshape;
+import com.kookyar.common.PitchView;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -11,35 +14,38 @@ import org.puredata.core.PdListener;
 import org.puredata.core.utils.IoUtils;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.ColorStateList;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -47,7 +53,7 @@ import com.PouyaApp.kookyargitar.R;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 
-public class GitarTuner extends Activity implements OnClickListener
+public class GitarTuner extends AppCompatActivity implements OnClickListener, OnItemSelectedListener
 		 {
 
 	private static final String TAG = "KookYaR";
@@ -66,9 +72,15 @@ public class GitarTuner extends Activity implements OnClickListener
 	private boolean kukSelected = false;
 	private double trigeeredNote;
 	OnSharedPreferenceChangeListener listener;
+	SharedPreferences getprefs;
 	private int laFrequens = 440;
 	private int sensitiveLevel = midSensitive;
 	private int pressure;
+	private CheckBox tuning;
+	private Spinner kookChangeSpinner;
+	private double nimpardehSub = 0;
+	private int selectedStringIndex = -1;
+	private int lastTunedIndex = -1;
 	Thread t;
 	private boolean threadRuned = false;
 	private boolean threadRuned2 = false;
@@ -124,12 +136,12 @@ public class GitarTuner extends Activity implements OnClickListener
 					sensitiveLevel = lowSensitive;
 				}
 				
-				tar1.setBackgroundResource(R.drawable.button_tuner_style);
-				tar2.setBackgroundResource(R.drawable.button_tuner_style);
-				tar3.setBackgroundResource(R.drawable.button_tuner_style);
-				tar4.setBackgroundResource(R.drawable.button_tuner_style);
-				tar5.setBackgroundResource(R.drawable.button_tuner_style);
-				tar6.setBackgroundResource(R.drawable.button_tuner_style);
+				tar1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+				tar2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+				tar3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+				tar4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+				tar5.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+				tar6.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
 
 				pitchLabel.setText(PersianReshape
 						.reshape("سیم مورد نظر جهت کوک کردن را انتخاب کنید"));
@@ -215,6 +227,8 @@ public class GitarTuner extends Activity implements OnClickListener
 
 	private void initGui() {
 
+		Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+		setSupportActionBar(toolbar);
 
 		Typeface face = Typeface.createFromAsset(getAssets(), "font/" + fonts
 				+ "");
@@ -271,7 +285,7 @@ public class GitarTuner extends Activity implements OnClickListener
 		pitchView = (PitchView) findViewById(R.id.pitch_view);
 
 
-		SharedPreferences getprefs = PreferenceManager
+		getprefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 		laFrequens = Integer.parseInt(getprefs.getString("ref", "440"));
 		pitchView.setAFrequnse(laFrequens);
@@ -285,17 +299,37 @@ public class GitarTuner extends Activity implements OnClickListener
 			sensitiveLevel = lowSensitive;
 		}
 
-		
+		kookChangeSpinner = (Spinner) findViewById(R.id.spinnerKookChange);
+		ArrayAdapter<CharSequence> kookChangeAdapter = ArrayAdapter.createFromResource(this, R.array.kookChange, R.layout.spinner_item);
+		kookChangeAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+		kookChangeSpinner.setAdapter(kookChangeAdapter);
+		kookChangeSpinner.setOnItemSelectedListener(this);
+		kookChangeSpinner.setSelection(getprefs.getInt("change", 0));
+
+		tuning = (CheckBox) findViewById(R.id.checkBox_tuning);
+		findViewById(R.id.tuning).setOnClickListener(this);
+		tuning.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				lastTunedIndex = -1;
+				if (isChecked) {
+					Toast.makeText(getApplicationContext(),
+							"توجه : در صورتی که اولین بار است ساز خود را با کوک یار کوک می کنید، بهتر است سیم ها را به صورت دستی انتخاب کنید",
+							Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
 		pitchLabel.setText(PersianReshape
 				.reshape("سیم مورد نظر جهت کوک کردن را انتخاب کنید"));
 
 
-		tar1.setBackgroundResource(R.drawable.button_tuner_style);
-		tar2.setBackgroundResource(R.drawable.button_tuner_style);
-		tar3.setBackgroundResource(R.drawable.button_tuner_style);
-		tar4.setBackgroundResource(R.drawable.button_tuner_style);
-		tar5.setBackgroundResource(R.drawable.button_tuner_style);
-		tar6.setBackgroundResource(R.drawable.button_tuner_style);
+		tar1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+		tar2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+		tar3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+		tar4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+		tar5.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+		tar6.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
 	}
 
 	private void initPd() throws IOException {
@@ -319,6 +353,16 @@ public class GitarTuner extends Activity implements OnClickListener
 					}
 					float pitch = (float) Math.round(x * 1000) / 1000;
 					pitchView.setCurrentPitch(pitch);
+
+					if (tuning.isChecked()) {
+						for (int i = 0; i < Miditone.length; i++) {
+							double target = Miditone[i] - nimpardehSub;
+							if (pitch >= target - 0.4 && pitch <= target + 0.4) {
+								autoTune(i);
+								break;
+							}
+						}
+					}
 
 					if (t == null || (pitchView.getCenterPitch() != 12 && !threadRuned)) {
 						t = new Thread(new Thread() {
@@ -363,9 +407,9 @@ public class GitarTuner extends Activity implements OnClickListener
 
 	private void loadPatch() throws IOException {
 		File dir = getFilesDir();
-		IoUtils.extractZipResource(getResources().openRawResource(R.raw.tuner),
+		IoUtils.extractZipResource(getResources().openRawResource(R.raw.temp),
 				dir, true);
-		File patchFile = new File(dir, "tuner.pd");
+		File patchFile = new File(dir, "path");
 		PdBase.openPatch(patchFile.getAbsolutePath());
 	}
 
@@ -375,71 +419,107 @@ public class GitarTuner extends Activity implements OnClickListener
 	private void triggerNote(float triggeredNote) {
 		float realMidi = midiToRealMidi(triggeredNote);
 		pitchView.setCenterPitch(realMidi);
-		pitchView.setCurrentPitch(12);
 		pitchView.setMidiRef(triggeredNote);
 		PdBase.sendFloat("midinote", realMidi);
 		PdBase.sendBang("trigger");
 	}
+
+	private void triggerNote2(float triggeredNote) {
+		float realMidi = midiToRealMidi(triggeredNote);
+		pitchView.setCenterPitch(realMidi);
+		pitchView.setMidiRef(triggeredNote);
+	}
 	
 	private float midiToRealMidi(float midi) {
-		// Convert MIDI note to real frequency representation
-		return midi;
+		double frequens = laFrequens * Math.pow(2, ((midi - 69) / 12));
+		float RealMidi = 69 + 12 * (float) Math.log(frequens / 440.0f)
+				/ (float) Math.log(2.0);
+		RealMidi = (float) Math.round(RealMidi * 1000) / 1000;
+		return RealMidi;
+	}
+
+	private void resetStringTints() {
+		int defaultTint = Color.parseColor("#FF303F9F");
+		tar1.setBackgroundTintList(ColorStateList.valueOf(defaultTint));
+		tar2.setBackgroundTintList(ColorStateList.valueOf(defaultTint));
+		tar3.setBackgroundTintList(ColorStateList.valueOf(defaultTint));
+		tar4.setBackgroundTintList(ColorStateList.valueOf(defaultTint));
+		tar5.setBackgroundTintList(ColorStateList.valueOf(defaultTint));
+		tar6.setBackgroundTintList(ColorStateList.valueOf(defaultTint));
+	}
+
+	private void highlightString(int i) {
+		resetStringTints();
+		int selectedTint = Color.parseColor("#FFFFBB33");
+		Button[] btns = {tar1, tar2, tar3, tar4, tar5, tar6};
+		btns[i].setBackgroundTintList(ColorStateList.valueOf(selectedTint));
+	}
+
+	private void selectString(int i, int imageRes, String label) {
+		selectedStringIndex = i;
+		lastTunedIndex = -1;
+		triggerNote((float) (Miditone[i] - nimpardehSub));
+		pitchLabel.setText(PersianReshape.reshape(label));
+		ivTar.setBackgroundResource(imageRes);
+		YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
+		highlightString(i);
+	}
+
+	private void autoTune(int i) {
+		if (i == lastTunedIndex) return;
+		lastTunedIndex = i;
+		selectedStringIndex = i;
+		int[] imgs = {R.drawable.gitar1, R.drawable.gitar2, R.drawable.gitar3, R.drawable.gitar4, R.drawable.gitar5, R.drawable.gitar6};
+		String[] labels = {"سیم اول", "سیم دوم", "سیم سوم", "سیم چهارم", "سیم پنجم", "سیم ششم"};
+		triggerNote2((float) (Miditone[i] - nimpardehSub));
+		pitchLabel.setText(PersianReshape.reshape(labels[i]));
+		ivTar.setBackgroundResource(imgs[i]);
+		highlightString(i);
 	}
 
 	@Override
 	public void onClick(View v) {
 		int viewId = v.getId();
-		
-		// Reset all button backgrounds
-		tar1.setBackgroundResource(R.drawable.button_tuner_style);
-		tar2.setBackgroundResource(R.drawable.button_tuner_style);
-		tar3.setBackgroundResource(R.drawable.button_tuner_style);
-		tar4.setBackgroundResource(R.drawable.button_tuner_style);
-		tar5.setBackgroundResource(R.drawable.button_tuner_style);
-		tar6.setBackgroundResource(R.drawable.button_tuner_style);
-		
-		if (viewId == R.id.tar_1) {
-			triggerNote((float) (Miditone[0]));
-			pitchLabel.setText(PersianReshape.reshape("سیم اول"));
-			ivTar.setBackgroundResource(R.drawable.gitar1);
-			YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
-			tar1.setBackgroundResource(R.drawable.button_tuner_selected);
+
+		if (viewId == R.id.tuning) {
+			tuning.setChecked(!tuning.isChecked());
+		} else if (viewId == R.id.tar_1) {
+			selectString(0, R.drawable.gitar1, "سیم اول");
 		} else if (viewId == R.id.tar_2) {
-			triggerNote((float) (Miditone[1]));
-			pitchLabel.setText(PersianReshape.reshape("سیم دوم"));
-			ivTar.setBackgroundResource(R.drawable.gitar2);
-			YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
-			tar2.setBackgroundResource(R.drawable.button_tuner_selected);
+			selectString(1, R.drawable.gitar2, "سیم دوم");
 		} else if (viewId == R.id.tar_3) {
-			triggerNote((float) (Miditone[2]));
-			pitchLabel.setText(PersianReshape.reshape("سیم سوم"));
-			ivTar.setBackgroundResource(R.drawable.gitar3);
-			YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
-			tar3.setBackgroundResource(R.drawable.button_tuner_selected);
+			selectString(2, R.drawable.gitar3, "سیم سوم");
 		} else if (viewId == R.id.tar_4) {
-			triggerNote((float) (Miditone[3]));
-			pitchLabel.setText(PersianReshape.reshape("سیم چهارم"));
-			ivTar.setBackgroundResource(R.drawable.gitar4);
-			YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
-			tar4.setBackgroundResource(R.drawable.button_tuner_selected);
+			selectString(3, R.drawable.gitar4, "سیم چهارم");
 		} else if (viewId == R.id.tar_5) {
-			triggerNote((float) (Miditone[4]));
-			pitchLabel.setText(PersianReshape.reshape("سیم پنجم"));
-			ivTar.setBackgroundResource(R.drawable.gitar5);
-			YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
-			tar5.setBackgroundResource(R.drawable.button_tuner_selected);
+			selectString(4, R.drawable.gitar5, "سیم پنجم");
 		} else if (viewId == R.id.tar_6) {
-			triggerNote((float) (Miditone[5]));
-			pitchLabel.setText(PersianReshape.reshape("سیم ششم"));
-			ivTar.setBackgroundResource(R.drawable.gitar6);
-			YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
-			tar6.setBackgroundResource(R.drawable.button_tuner_selected);
+			selectString(5, R.drawable.gitar6, "سیم ششم");
 		}
 	}
 
-	private float midiToFrequnes(float i) {
-		double frequens = laFrequens*Math.pow(2, ((i-69)/12)) ;
-		return (float) frequens;
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		if (parent.getId() == R.id.spinnerKookChange) {
+			switch (position) {
+				case 0: nimpardehSub = 0; break;
+				case 1: nimpardehSub = 0.5; break;
+				case 2: nimpardehSub = 1; break;
+				case 3: nimpardehSub = 2; break;
+			}
+			if (selectedStringIndex >= 0) {
+				triggerNote2((float) (Miditone[selectedStringIndex] - nimpardehSub));
+			}
+			if (getprefs != null) {
+				SharedPreferences.Editor editor = getprefs.edit();
+				editor.putInt("change", position);
+				editor.apply();
+			}
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
 	}
 
 }
