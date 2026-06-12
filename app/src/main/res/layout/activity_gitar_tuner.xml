@@ -4,10 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layoutDirection="rtl"
     android:fitsSystemWindows="true"
     android:background="@color/surfaceColor">
 
     <include layout="@layout/app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -189,8 +201,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="130dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/gitar"
             android:gravity="center"
             android:orientation="vertical">
@@ -198,7 +210,7 @@
             <LinearLayout
                 android:id="@+id/layout_sim"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="150dp"
                 android:orientation="vertical" />
         </LinearLayout>
     </LinearLayout>
@@ -218,7 +230,10 @@
     <com.kookyar.common.PitchView
         android:id="@+id/pitch_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="350dp"
         android:layout_weight="1" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
