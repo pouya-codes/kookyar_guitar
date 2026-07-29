@@ -2,6 +2,7 @@ package com.PouyaApp.kookyargitar;
 
 import com.kookyar.common.PersianReshape;
 import com.kookyar.common.PitchView;
+import com.kookyar.common.TunerPitchCoordinator;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,9 +83,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 	private double nimpardehSub = 0;
 	private int selectedStringIndex = -1;
 	private int lastTunedIndex = -1;
-	Thread t;
-	private boolean threadRuned = false;
-	private boolean threadRuned2 = false;
+	private final TunerPitchCoordinator pitchCoordinator = new TunerPitchCoordinator();
 
 	private double[] Miditone = {64, 59, 55, 50, 45, 40};
 
@@ -223,6 +222,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		pitchCoordinator.destroy();
 		unbindService(pdConnection);
 	}
 
@@ -339,6 +339,11 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		int sampleRate = AudioParameters.suggestSampleRate();
 		pdService.initAudio(sampleRate, 1, 2, 20.0f);
 		start();
+		pitchCoordinator.setAudioStarter(() -> {
+			if (pdService != null && !pdService.isRunning()) {
+				pdService.startAudio();
+			}
+		});
 
 		// Create and install the dispatcher
 		dispatcher = new PdUiDispatcher();
@@ -348,45 +353,22 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 			@Override
 			public void receiveFloat(String source, final float x) {
 
-				if (pressure >= sensitiveLevel) {
-					if(threadRuned){
-						threadRuned2=false;
-					}
-					float pitch = (float) Math.round(x * 1000) / 1000;
-					pitchView.setCurrentPitch(pitch);
-
-					if (tuning.isChecked()) {
-						for (int i = 0; i < Miditone.length; i++) {
-							double target = Miditone[i] - nimpardehSub;
-							if (pitch >= target - 0.4 && pitch <= target + 0.4) {
-								autoTune(i);
-								break;
-							}
-						}
-					}
-
-					if (t == null || (pitchView.getCenterPitch() != 12 && !threadRuned)) {
-						t = new Thread(new Thread() {
-
-							@Override
-							public void run() {
-								threadRuned = true;
-								threadRuned2 = true;
-								try {
-									Log.d(TAG, "run: " + Thread.currentThread());
-									sleep(2500);
-									Log.d(TAG, "stop: " + Thread.currentThread());
-									if (threadRuned2) {
-										pitchView.setCurrentPitch(12);
+				if (pressure >= sensitiveLevel && pitchView.getCenterPitch() > 0) {
+					final float pitch = (float) Math.round(x * 1000) / 1000;
+					pitchCoordinator.onPitchInput(
+							() -> {
+								pitchView.setCurrentPitch(pitch);
+								if (tuning.isChecked()) {
+									for (int i = 0; i < Miditone.length; i++) {
+										double target = Miditone[i] - nimpardehSub;
+										if (pitch >= target - 0.4 && pitch <= target + 0.4) {
+											autoTune(i);
+											break;
+										}
 									}
-									threadRuned = false;
-								} catch (InterruptedException e) {
-									e.printStackTrace();
 								}
-							}
-						});
-						t.start();
-					}
+							},
+							() -> pitchView.setCurrentPitch(12));
 				}
 			}
 		});
@@ -419,13 +401,19 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 
 	private void triggerNote(float triggeredNote) {
 		float realMidi = midiToRealMidi(triggeredNote);
+		pitchCoordinator.invalidatePitchReset();
 		pitchView.setCenterPitch(realMidi);
+		pitchView.setCurrentPitch(12);
 		pitchView.setMidiRef(triggeredNote);
-		PdBase.sendFloat("midinote", realMidi);
-		PdBase.sendBang("trigger");
+		final float midiForPd = realMidi;
+		pitchCoordinator.scheduleTrigger(() -> TunerPitchCoordinator.runPdSend(() -> {
+			PdBase.sendFloat("midinote", midiForPd);
+			PdBase.sendBang("trigger");
+		}));
 	}
 
 	private void triggerNote2(float triggeredNote) {
+		pitchCoordinator.invalidatePitchReset();
 		float realMidi = midiToRealMidi(triggeredNote);
 		pitchView.setCenterPitch(realMidi);
 		pitchView.setMidiRef(triggeredNote);
