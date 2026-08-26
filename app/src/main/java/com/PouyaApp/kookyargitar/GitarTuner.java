@@ -1,5 +1,8 @@
 package com.PouyaApp.kookyargitar;
 
+import com.kookyar.common.FeatureBar;
+import com.kookyar.common.MetronomeLauncher;
+import com.kookyar.common.RadifLauncher;
 import com.kookyar.common.PersianReshape;
 import com.kookyar.common.PitchView;
 import com.kookyar.common.TunerPitchCoordinator;
@@ -28,8 +31,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -88,30 +89,32 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 	private double[] Miditone = {64, 59, 55, 50, 45, 40};
 
 	private PdService pdService = null;
-	@Override
-	public boolean onCreateOptionsMenu(android.view.Menu menu) {
-		// TODO Auto-generated method stub
-		super.onCreateOptionsMenu(menu);
-		MenuInflater blowUp = getMenuInflater();
-		blowUp.inflate(R.menu.gitar_menu, menu);
-		return true;
 
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		int id = item.getItemId();
-		if (id == R.id.help_tuner) {
-			Intent i = new Intent(GitarTuner.this, TunerHelp.class);
-			startActivity(i);
-		} else if (id == R.id.bazgasht) {
-			finish();
-		} else if (id == R.id.settings_menu) {
-			Intent j = new Intent(GitarTuner.this, Prefs.class);
-			startActivity(j);
-		}
-		return true;
+	/** Flat switcher: every feature is one tap from the tuner. */
+	private void initFeatureBar() {
+		FeatureBar featureBar = findViewById(R.id.feature_bar);
+		featureBar.setAccentColor(ContextCompat.getColor(this, R.color.accentColor));
+		featureBar.setInactiveColor(ContextCompat.getColor(this, R.color.onSurfaceVariant));
+		featureBar.setItems(
+				FeatureBar.Item.current(
+						getString(com.kookyar.common.R.string.kookyar_feature_tuner),
+						com.kookyar.common.R.drawable.ic_kookyar_tuner),
+				FeatureBar.Item.of(
+						getString(com.kookyar.common.R.string.kookyar_feature_metronome),
+						com.kookyar.common.R.drawable.ic_kookyar_metronome,
+						() -> MetronomeLauncher.open(this)),
+				FeatureBar.Item.of(
+						getString(com.kookyar.common.R.string.kookyar_feature_radif),
+						com.kookyar.common.R.drawable.ic_kookyar_radif,
+						() -> RadifLauncher.open(this)),
+				FeatureBar.Item.of(
+						getString(com.kookyar.common.R.string.kookyar_feature_help),
+						com.kookyar.common.R.drawable.ic_kookyar_help,
+						() -> startActivity(new Intent(this, TunerHelp.class))),
+				FeatureBar.Item.of(
+						getString(com.kookyar.common.R.string.kookyar_feature_settings),
+						com.kookyar.common.R.drawable.ic_kookyar_settings,
+						() -> startActivity(new Intent(this, Prefs.class))));
 	}
 
 	private void prefsListnner() {
@@ -331,6 +334,8 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		tar4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
 		tar5.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
 		tar6.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
+
+		initFeatureBar();
 	}
 
 	private void initPd() throws IOException {
