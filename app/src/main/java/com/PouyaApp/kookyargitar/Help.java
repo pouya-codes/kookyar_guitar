@@ -24,7 +24,7 @@ public class Help extends Activity {
 		help = (TextView) findViewById(R.id.helpTV) ;
 		help.setTypeface(face);
 		String str_tv = (String) help.getText().toString();
-		help.setText(PersianReshape.reshape(str_tv));
+		help.setText(PersianReshape.forDisplay(this, str_tv));
 
 	}
 }

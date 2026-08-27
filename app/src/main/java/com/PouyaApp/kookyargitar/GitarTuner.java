@@ -243,7 +243,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		tar1.setOnClickListener(this);
 		tar1.setTypeface(face);
 		String str_b1 = (String) tar1.getText().toString();
-		tar1.setText(PersianReshape.reshape(str_b1));
+		tar1.setText(PersianReshape.forDisplay(this, str_b1));
 		
 
 		// -----------------------------------------------
@@ -251,21 +251,21 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		tar2.setOnClickListener(this);
 		tar2.setTypeface(face);
 		String str_b2 = (String) tar2.getText().toString();
-		tar2.setText(PersianReshape.reshape(str_b2));
+		tar2.setText(PersianReshape.forDisplay(this, str_b2));
 
 		// ------------------------------------------------
 		tar3 = (Button) findViewById(R.id.tar_3);
 		tar3.setOnClickListener(this);
 		tar3.setTypeface(face);
 		String str_b3 = (String) tar3.getText().toString();
-		tar3.setText(PersianReshape.reshape(str_b3));
+		tar3.setText(PersianReshape.forDisplay(this, str_b3));
 
 		// ------------------------------------------------
 		tar4 = (Button) findViewById(R.id.tar_4);
 		tar4.setOnClickListener(this);
 		tar4.setTypeface(face);
 		String str_b4 = (String) tar4.getText().toString();
-		tar4.setText(PersianReshape.reshape(str_b4));
+		tar4.setText(PersianReshape.forDisplay(this, str_b4));
 
 
 		// ------------------------------------------------
@@ -273,7 +273,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		tar5.setOnClickListener(this);
 		tar5.setTypeface(face);
 		String str_b5 = (String) tar5.getText().toString();
-		tar5.setText(PersianReshape.reshape(str_b5));
+		tar5.setText(PersianReshape.forDisplay(this, str_b5));
 
 
 		// ------------------------------------------------
@@ -281,7 +281,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		tar6.setOnClickListener(this);
 		tar6.setTypeface(face);
 		String str_b6 = (String) tar6.getText().toString();
-		tar6.setText(PersianReshape.reshape(str_b6));
+		tar6.setText(PersianReshape.forDisplay(this, str_b6));
 
 
 		// ------------------------------------------------
@@ -453,7 +453,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		selectedStringIndex = i;
 		lastTunedIndex = -1;
 		triggerNote((float) (Miditone[i] - nimpardehSub));
-		pitchLabel.setText(PersianReshape.reshape(label));
+		pitchLabel.setText(PersianReshape.forDisplay(this, label));
 		ivTar.setBackgroundResource(imageRes);
 		YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
 		highlightString(i);
@@ -466,7 +466,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		int[] imgs = {R.drawable.gitar1, R.drawable.gitar2, R.drawable.gitar3, R.drawable.gitar4, R.drawable.gitar5, R.drawable.gitar6};
 		String[] labels = {"سیم اول", "سیم دوم", "سیم سوم", "سیم چهارم", "سیم پنجم", "سیم ششم"};
 		triggerNote2((float) (Miditone[i] - nimpardehSub));
-		pitchLabel.setText(PersianReshape.reshape(labels[i]));
+		pitchLabel.setText(PersianReshape.forDisplay(this, labels[i]));
 		ivTar.setBackgroundResource(imgs[i]);
 		highlightString(i);
 	}

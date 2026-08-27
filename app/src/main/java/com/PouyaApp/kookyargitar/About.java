@@ -29,22 +29,22 @@ public class About extends Activity {
 		tv1 = (TextView) findViewById(R.id.aboutText) ;
 		tv1.setTypeface(face);
 		String str_tv = (String) tv1.getText().toString();
-		tv1.setText(PersianReshape.reshape(str_tv));
+		tv1.setText(PersianReshape.forDisplay(this, str_tv));
 
 		tv2 = (TextView) findViewById(R.id.aboutText1) ;
 		tv2.setTypeface(face);
 		String str_tv2 = (String) tv2.getText().toString();
-		tv2.setText(PersianReshape.reshape(str_tv2));
+		tv2.setText(PersianReshape.forDisplay(this, str_tv2));
 		
 		tv3 = (TextView) findViewById(R.id.aboutText2) ;
 		tv3.setTypeface(face);
 		String str_tv3 = (String) tv3.getText().toString();
-		tv3.setText(PersianReshape.reshape(str_tv3));
+		tv3.setText(PersianReshape.forDisplay(this, str_tv3));
 		
 		tv4 = (TextView) findViewById(R.id.aboutText3) ;
 		tv4.setTypeface(face);
 		String str_tv4 = (String) tv4.getText().toString();
-		tv4.setText(PersianReshape.reshape(str_tv4));
+		tv4.setText(PersianReshape.forDisplay(this, str_tv4));
 	}
 	
 

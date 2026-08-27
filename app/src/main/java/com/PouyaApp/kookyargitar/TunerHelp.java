@@ -24,6 +24,6 @@ public class TunerHelp extends Activity {
 		TextView help = (TextView) findViewById(R.id.tunerHelp) ;
 		help.setTypeface(face);
 		String str_tv = (String) help.getText().toString();
-		help.setText(PersianReshape.reshape(str_tv));
+		help.setText(PersianReshape.forDisplay(this, str_tv));
 	}
 }
