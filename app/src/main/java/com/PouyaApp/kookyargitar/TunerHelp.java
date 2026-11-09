@@ -1,5 +1,6 @@
 package com.PouyaApp.kookyargitar;
 
+import com.kookyar.common.KookyarFonts;
 import com.kookyar.common.PersianReshape;
 
 
@@ -20,7 +21,7 @@ public class TunerHelp extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tuner_help);
-		Typeface face = Typeface.createFromAsset(getAssets(), "font/"+fonts+"");
+		Typeface face = KookyarFonts.get(this, fonts);
 		TextView help = (TextView) findViewById(R.id.tunerHelp) ;
 		help.setTypeface(face);
 		String str_tv = (String) help.getText().toString();

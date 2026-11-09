@@ -1,5 +1,9 @@
 package com.PouyaApp.kookyargitar;
 
+import com.kookyar.common.EdgeToEdge;
+import com.kookyar.common.TextPageActivity;
+import com.kookyar.common.KookyarFonts;
+import com.kookyar.common.Anim;
 import com.kookyar.common.FeatureBar;
 import com.kookyar.common.MetronomeLauncher;
 import com.kookyar.common.RadifLauncher;
@@ -53,8 +57,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import com.PouyaApp.kookyargitar.R;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 
 public class GitarTuner extends AppCompatActivity implements OnClickListener, OnItemSelectedListener
 		 {
@@ -110,7 +112,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 				FeatureBar.Item.of(
 						getString(com.kookyar.common.R.string.kookyar_feature_help),
 						com.kookyar.common.R.drawable.ic_kookyar_help,
-						() -> startActivity(new Intent(this, TunerHelp.class))),
+						() -> TextPageActivity.open(this, R.string.rahnama, R.string.TunerHelp)),
 				FeatureBar.Item.of(
 						getString(com.kookyar.common.R.string.kookyar_feature_settings),
 						com.kookyar.common.R.drawable.ic_kookyar_settings,
@@ -146,8 +148,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 				tar5.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
 				tar6.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
 
-				pitchLabel.setText(PersianReshape
-						.reshape("سیم مورد نظر جهت کوک کردن را انتخاب کنید"));
+				pitchLabel.setText(getString(com.kookyar.common.R.string.kookyar_gauge_pick_string));
 				pitchView.setCenterPitch(0);
 
 			}
@@ -178,6 +179,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gitar_tuner);
+		EdgeToEdge.apply(this, findViewById(R.id.tuner_root), findViewById(R.id.app_bar), findViewById(R.id.feature_bar));
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		initGui();
 		prefsListnner();
@@ -200,7 +202,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				initAudio();
 			} else {
-				Toast.makeText(this, "دسترسی به میکروفون برای کار کردن کوک یار ضروری است", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, com.kookyar.common.R.string.kookyar_mic_required, Toast.LENGTH_LONG).show();
 				finish();
 			}
 		}
@@ -222,6 +224,24 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		pitchView.resume();
 	}
 
+
+	/** Stop the microphone and audio thread while the screen is not visible. */
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (pdService != null && !pdService.isRunning()) {
+			pdService.startAudio();
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (pdService != null && pdService.isRunning()) {
+			pdService.stopAudio();
+		}
+	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -234,8 +254,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
 		setSupportActionBar(toolbar);
 
-		Typeface face = Typeface.createFromAsset(getAssets(), "font/" + fonts
-				+ "");
+		Typeface face = KookyarFonts.get(this, fonts);
 		
 		ivTar = (LinearLayout) findViewById(R.id.layout_sim);
 
@@ -318,14 +337,13 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 				lastTunedIndex = -1;
 				if (isChecked) {
 					Toast.makeText(getApplicationContext(),
-							"توجه : در صورتی که اولین بار است ساز خود را با کوک یار کوک می کنید، بهتر است سیم ها را به صورت دستی انتخاب کنید",
+							com.kookyar.common.R.string.kookyar_auto_detect_hint,
 							Toast.LENGTH_LONG).show();
 				}
 			}
 		});
 
-		pitchLabel.setText(PersianReshape
-				.reshape("سیم مورد نظر جهت کوک کردن را انتخاب کنید"));
+		pitchLabel.setText(getString(com.kookyar.common.R.string.kookyar_gauge_pick_string));
 
 
 		tar1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
@@ -455,7 +473,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		triggerNote((float) (Miditone[i] - nimpardehSub));
 		pitchLabel.setText(PersianReshape.forDisplay(this, label));
 		ivTar.setBackgroundResource(imageRes);
-		YoYo.with(Techniques.Landing).duration(700).playOn(findViewById(R.id.layout_sim));
+		Anim.landing(findViewById(R.id.layout_sim));
 		highlightString(i);
 	}
 
@@ -464,7 +482,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		lastTunedIndex = i;
 		selectedStringIndex = i;
 		int[] imgs = {R.drawable.gitar1, R.drawable.gitar2, R.drawable.gitar3, R.drawable.gitar4, R.drawable.gitar5, R.drawable.gitar6};
-		String[] labels = {"سیم اول", "سیم دوم", "سیم سوم", "سیم چهارم", "سیم پنجم", "سیم ششم"};
+		String[] labels = {getString(R.string.sim_1), getString(R.string.sim_2), getString(R.string.sim_3), getString(R.string.sim_4), getString(R.string.sim_5), getString(R.string.sim_6)};
 		triggerNote2((float) (Miditone[i] - nimpardehSub));
 		pitchLabel.setText(PersianReshape.forDisplay(this, labels[i]));
 		ivTar.setBackgroundResource(imgs[i]);
@@ -478,17 +496,17 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		if (viewId == R.id.tuning) {
 			tuning.setChecked(!tuning.isChecked());
 		} else if (viewId == R.id.tar_1) {
-			selectString(0, R.drawable.gitar1, "سیم اول");
+			selectString(0, R.drawable.gitar1, getString(R.string.sim_1));
 		} else if (viewId == R.id.tar_2) {
-			selectString(1, R.drawable.gitar2, "سیم دوم");
+			selectString(1, R.drawable.gitar2, getString(R.string.sim_2));
 		} else if (viewId == R.id.tar_3) {
-			selectString(2, R.drawable.gitar3, "سیم سوم");
+			selectString(2, R.drawable.gitar3, getString(R.string.sim_3));
 		} else if (viewId == R.id.tar_4) {
-			selectString(3, R.drawable.gitar4, "سیم چهارم");
+			selectString(3, R.drawable.gitar4, getString(R.string.sim_4));
 		} else if (viewId == R.id.tar_5) {
-			selectString(4, R.drawable.gitar5, "سیم پنجم");
+			selectString(4, R.drawable.gitar5, getString(R.string.sim_5));
 		} else if (viewId == R.id.tar_6) {
-			selectString(5, R.drawable.gitar6, "سیم ششم");
+			selectString(5, R.drawable.gitar6, getString(R.string.sim_6));
 		}
 	}
 

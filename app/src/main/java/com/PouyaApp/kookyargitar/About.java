@@ -1,5 +1,6 @@
 package com.PouyaApp.kookyargitar;
 
+import com.kookyar.common.KookyarFonts;
 import com.kookyar.common.PersianReshape;
 
 
@@ -25,7 +26,7 @@ public class About extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
-		Typeface face = Typeface.createFromAsset(getAssets(), "font/"+fonts+"");
+		Typeface face = KookyarFonts.get(this, fonts);
 		tv1 = (TextView) findViewById(R.id.aboutText) ;
 		tv1.setTypeface(face);
 		String str_tv = (String) tv1.getText().toString();
