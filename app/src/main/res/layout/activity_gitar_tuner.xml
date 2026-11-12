@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layoutDirection="rtl"
+    android:layoutDirection="locale"
     android:background="@color/surfaceColor">
 
     <include layout="@layout/app_bar" />
@@ -199,21 +199,14 @@
                 app:backgroundTint="@color/stringDefault" />
         </LinearLayout>
 
-        <LinearLayout
+        <com.kookyar.common.InstrumentView
+            android:id="@+id/layout_sim"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/gitar"
-            android:gravity="center"
-            android:orientation="vertical">
+            app:instrument="guitar" />
 
-            <LinearLayout
-                android:id="@+id/layout_sim"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:orientation="vertical" />
-        </LinearLayout>
-    </LinearLayout>
+</LinearLayout>
 
     <TextView
         android:id="@+id/pitch_label"

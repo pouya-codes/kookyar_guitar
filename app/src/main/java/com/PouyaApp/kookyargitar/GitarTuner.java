@@ -9,6 +9,7 @@ import com.kookyar.common.MetronomeLauncher;
 import com.kookyar.common.RadifLauncher;
 import com.kookyar.common.PersianReshape;
 import com.kookyar.common.PitchView;
+import com.kookyar.common.InstrumentView;
 import com.kookyar.common.TunerPitchCoordinator;
 
 import java.io.File;
@@ -70,7 +71,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 	
 	private PdUiDispatcher dispatcher;
 	public String fonts = "BZar.ttf";
-	private LinearLayout ivTar;
+	private InstrumentView ivTar;
 	private Button tar1, tar2, tar3, tar4, tar5, tar6;
 	private TextView pitchLabel;
 	private PitchView pitchView;
@@ -148,6 +149,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 				tar5.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
 				tar6.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FF303F9F")));
 
+				ivTar.setSelectedString(-1);
 				pitchLabel.setText(getString(com.kookyar.common.R.string.kookyar_gauge_pick_string));
 				pitchView.setCenterPitch(0);
 
@@ -256,7 +258,9 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 
 		Typeface face = KookyarFonts.get(this, fonts);
 		
-		ivTar = (LinearLayout) findViewById(R.id.layout_sim);
+		ivTar = findViewById(R.id.layout_sim);
+		ivTar.setOnStringSelectedListener(this::selectString);
+		ivTar.setStringNotes(displayedNotes());
 
 		tar1 = (Button) findViewById(R.id.tar_1);
 		tar1.setOnClickListener(this);
@@ -467,25 +471,38 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		btns[i].setBackgroundTintList(ColorStateList.valueOf(selectedTint));
 	}
 
-	private void selectString(int i, int imageRes, String label) {
+	private void selectString(int i) {
 		selectedStringIndex = i;
 		lastTunedIndex = -1;
 		triggerNote((float) (Miditone[i] - nimpardehSub));
-		pitchLabel.setText(PersianReshape.forDisplay(this, label));
-		ivTar.setBackgroundResource(imageRes);
+		pitchLabel.setText(PersianReshape.forDisplay(this, stringLabel(i)));
+		ivTar.setSelectedString(i);
 		Anim.landing(findViewById(R.id.layout_sim));
 		highlightString(i);
+	}
+
+	/** "String n" in the current language. */
+	private String stringLabel(int i) {
+		int[] names = {R.string.sim_1, R.string.sim_2, R.string.sim_3, R.string.sim_4, R.string.sim_5, R.string.sim_6};
+		return getString(names[i]);
+	}
+
+	/** Notes the picture labels its strings with: the tuning less the transpose. */
+	private double[] displayedNotes() {
+		double[] notes = new double[Miditone.length];
+		for (int i = 0; i < notes.length; i++) {
+			notes[i] = Miditone[i] - nimpardehSub;
+		}
+		return notes;
 	}
 
 	private void autoTune(int i) {
 		if (i == lastTunedIndex) return;
 		lastTunedIndex = i;
 		selectedStringIndex = i;
-		int[] imgs = {R.drawable.gitar1, R.drawable.gitar2, R.drawable.gitar3, R.drawable.gitar4, R.drawable.gitar5, R.drawable.gitar6};
-		String[] labels = {getString(R.string.sim_1), getString(R.string.sim_2), getString(R.string.sim_3), getString(R.string.sim_4), getString(R.string.sim_5), getString(R.string.sim_6)};
 		triggerNote2((float) (Miditone[i] - nimpardehSub));
-		pitchLabel.setText(PersianReshape.forDisplay(this, labels[i]));
-		ivTar.setBackgroundResource(imgs[i]);
+		pitchLabel.setText(PersianReshape.forDisplay(this, stringLabel(i)));
+		ivTar.setSelectedString(i);
 		highlightString(i);
 	}
 
@@ -496,17 +513,17 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 		if (viewId == R.id.tuning) {
 			tuning.setChecked(!tuning.isChecked());
 		} else if (viewId == R.id.tar_1) {
-			selectString(0, R.drawable.gitar1, getString(R.string.sim_1));
+			selectString(0);
 		} else if (viewId == R.id.tar_2) {
-			selectString(1, R.drawable.gitar2, getString(R.string.sim_2));
+			selectString(1);
 		} else if (viewId == R.id.tar_3) {
-			selectString(2, R.drawable.gitar3, getString(R.string.sim_3));
+			selectString(2);
 		} else if (viewId == R.id.tar_4) {
-			selectString(3, R.drawable.gitar4, getString(R.string.sim_4));
+			selectString(3);
 		} else if (viewId == R.id.tar_5) {
-			selectString(4, R.drawable.gitar5, getString(R.string.sim_5));
+			selectString(4);
 		} else if (viewId == R.id.tar_6) {
-			selectString(5, R.drawable.gitar6, getString(R.string.sim_6));
+			selectString(5);
 		}
 	}
 
@@ -519,6 +536,7 @@ public class GitarTuner extends AppCompatActivity implements OnClickListener, On
 				case 2: nimpardehSub = 1; break;
 				case 3: nimpardehSub = 2; break;
 			}
+			ivTar.setStringNotes(displayedNotes());
 			if (selectedStringIndex >= 0) {
 				triggerNote2((float) (Miditone[selectedStringIndex] - nimpardehSub));
 			}
